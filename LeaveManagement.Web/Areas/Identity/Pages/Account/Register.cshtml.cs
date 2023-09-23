@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.Filters;
 using NuGet.Common;
+using LeaveManagement.Web.Constants;
 
 namespace LeaveManagement.Web.Areas.Identity.Pages.Account
 {
@@ -145,7 +146,7 @@ namespace LeaveManagement.Web.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-
+                    _userManager.AddToRoleAsync(user, Roles.User);
                     var userId = await _userManager.GetUserIdAsync(user);
                     //generate a token(string) that can be sent to the user via email to check email is Valid or not
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
