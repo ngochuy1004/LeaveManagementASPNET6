@@ -146,10 +146,14 @@ namespace LeaveManagement.Web.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    // assign role user for new account
                     _userManager.AddToRoleAsync(user, Roles.User);
                     var userId = await _userManager.GetUserIdAsync(user);
+
                     //generate a token(string) that can be sent to the user via email to check email is Valid or not
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
                     //encoding token
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
@@ -158,9 +162,11 @@ namespace LeaveManagement.Web.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
+                    // sending email for confirmation
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
+                    // wai for confirm
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
