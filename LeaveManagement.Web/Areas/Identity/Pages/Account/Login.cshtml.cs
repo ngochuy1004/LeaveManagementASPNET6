@@ -115,6 +115,10 @@ namespace LeaveManagement.Web.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    /*
+                     * Linq to check Email is confirmed or not will write in here
+                     * if confirmed => login else returen View Need confirm
+                     */
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }
